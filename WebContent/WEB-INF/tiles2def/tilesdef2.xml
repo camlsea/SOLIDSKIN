@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+    <definition name="index1" template="/WEB-INF/viewtiles2/template/mainlayout.jsp">
+        <put-attribute name="title"  value="Spring Tiles Example"/>
+        <put-attribute name="member"   value="/WEB-INF/viewtiles2/template/logForm.jsp"/>
+        <put-attribute name="menu"   value="/WEB-INF/viewtiles2/template/menu.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/viewtiles2/template/header.jsp"/>
+        <put-attribute name="logLine"   value="/WEB-INF/viewtiles2/template/logLine.jsp"/>
+        <put-attribute name="banner" value="/WEB-INF/viewtiles2/template/banner.jsp"/>
+     <!--     <put-attribute name="mainbody"   value="/WEB-INF/viewtiles2/template/mainbody.jsp"/> --> 
+         <put-attribute name="mininotice"   value="/miniboard/minilist.do"/>
+        <put-attribute name="miniart"   value="/miniboard/miniartBoardList.do"/>
+        <put-attribute name="minifree"   value="/miniboard/minifreeList.do"/>
+        <put-attribute name="footer" value="/WEB-INF/viewtiles2/template/footer.jsp"/>
+    </definition>
+    
+    
+    
+    <!--  <definition name="minimain" extends="index1">
+        <put-attribute name="mainbody"   value="/WEB-INF/miniboard/mini.jsp"/>
+    </definition> -->
+    
+    <!-- 최신글 test 
+    <definition name="minifreeList" extends="index1">
+        <put-attribute name="mainbody"   value="/WEB-INF/miniboard/minifreeList.jsp"/>
+    </definition>
+    
+    <definition name="miniArtList" extends="index1">
+        <put-attribute name="mainbody"   value="/WEB-INF/miniboard/miniartBoardList.jsp"/>
+    </definition>
+    
+    <definition name="miniList" extends="index1">
+        <put-attribute name="mainbody"   value="/WEB-INF/miniboard/minilist.jsp"/>
+    </definition>-->
+    
+    
+    <!-- main -->
+    <definition name="minifreeList" extends="index1">
+        <put-attribute name="minifree"   value="/WEB-INF/miniboard/minifreeList.jsp"/>
+    </definition>
+    
+    <definition name="miniArtList" extends="index1">
+        <put-attribute name="miniart"   value="/WEB-INF/miniboard/miniartBoardList.jsp"/>
+    </definition>
+    
+    <definition name="miniList" extends="index1">
+        <put-attribute name="mininotice"   value="/WEB-INF/miniboard/minilist.jsp"/>
+    </definition>
+    
+<!--     login  
+   <definition name="login1" extends="index1">
+        <put-attribute name="member"   value="/WEB-INF/login/login.jsp"/>
+    </definition>-->
+    
+     <!-- 로그인 -->
+   <definition name="login1" extends="index1">
+        <put-attribute name="member"   value="/WEB-INF/login/login.jsp"/>
+    </definition>
+   
+     <!-- 로그온 -->
+      <definition name="logon" extends="index1">
+        <put-attribute name="member"   value="/WEB-INF/login/logon.jsp"/>
+    </definition>
+
+    
+</tiles-definitions>

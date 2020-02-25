@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="board">
+	<typeAlias alias="NBoardModel" type="com.ojt.bbs.model.NBoardModel"/>
+	<typeAlias alias="NBoardCommentModel" type="com.ojt.bbs.model.NBoardCommentModel"/>
+	
+		<select id="getBoardList" parameterClass="java.util.HashMap" resultClass="NBoardModel">
+	select 
+			b.n_num, b.n_writer, b.n_title,
+			to_char(b.n_content), b.n_count,
+			to_char(b.n_date, 'YYYY-MM-DD') n_Date, 
+			count(c.nc_num) as "comment"			
+		from (select 
+				a.n_num, a.n_writer, a.n_title,
+				a.n_content, a.n_count,
+				a.n_date, rownum rnum
+			from (select 
+					n_num, n_writer, n_title,
+					n_content, n_count,
+					n_date
+				from art_notice
+        		order by n_num desc) a
+        ) b left outer join art_notice_comment c on b.n_num = c.linkedarticlenum
+	    where rnum between #startArticleNum# and #endArticleNum#
+	    group by
+	    	b.n_num, b.n_writer, b.n_title, 
+	    	to_char(b.n_content), b.n_count, 
+	    	b.n_date, b.rnum
+	    order by b.n_num desc
+	
+		
+
+	</select>
+
+	<insert id="writeArticle" parameterClass="NBoardModel">
+		INSERT INTO ART_NOTICE 
+		 	(N_NUM, N_TITLE, N_WRITER, N_DATE, N_COUNT, N_CONTENT)
+		 VALUES 
+		 	(notice_board_seq.nextval, #n_title#, #n_writer#, sysdate, #n_count#, #n_content#)
+	</insert>
+
+	<select id="searchArticle" parameterClass="java.util.HashMap" resultClass="NBoardModel">
+		select 
+			b.n_num, b.n_writer, b.n_title,
+			to_char(b.n_content), b.n_count,
+			to_char(b.n_date, 'YYYY-MM-DD') n_date, 
+			count(c.nc_num) as "comment"
+		from (select 
+				a.n_num, a.n_writer, a.n_title,
+				a.n_content, a.n_count,
+				a.n_date, rownum rnum
+			from (select 
+					n_num, n_writer, n_title,
+					n_content, n_count,
+					n_date
+				from art_notice
+				where $type$ like '%$keyword$%'
+        		order by n_num desc) a
+        ) b left outer join art_notice_comment c on b.n_num = c.linkedarticlenum
+	    where rnum between #startArticleNum# and #endArticleNum#
+	    group by 
+	    	b.n_num, b.n_writer, b.n_title, 
+	    	to_char(b.n_content), b.n_count, 
+	    	b.n_date
+	    order by b.n_num desc
+		
+	</select>
+	
+	<select id="getTotalNum" resultClass="int">
+		select 
+			count(n_num)
+		from ART_NOTICE
+	</select>
+	
+	<select id="getSearchTotalNum" resultClass="int">
+		select 
+			count(n_num)
+		from ART_NOTICE
+		where $type$ like '%$keyword$%'
+	</select>
+	
+	<insert id="writeComment" parameterClass="NBoardCommentModel">
+		insert into ART_NOTICE_COMMENT(nc_num, nc_writer, nc_content, nc_date, linkedArticleNum)
+			values(notice_cboard_seq.nextVal, #nc_writer#, #nc_content#, sysdate, #linkedArticleNum#)
+	</insert>
+	
+	<select id="getOneArticle" parameterClass="int" resultClass="NBoardModel">
+		select * from ART_NOTICE where n_num = #value#
+	</select>
+	
+	<select id="getCommentList" parameterClass="int" resultClass="NBoardCommentModel">
+		select 
+			nc_num, nc_writer, nc_content, 
+			nc_Date, linkedArticleNum
+		from ART_NOTICE_COMMENT
+  		where linkedArticleNum = #nc_num#
+  		order by nc_num asc
+	</select>
+	
+	<select id="getOneComment" parameterClass="int" resultClass="NBoardCommentModel">
+		select 
+			nc_num, nc_writer,
+			nc_content, 
+			nc_date, linkedArticleNum
+		from ART_NOTICE_COMMENT
+  		where nc_num = #nc_num#		
+	</select>
+	
+	<update id="modifyArticle" parameterClass="NBoardModel">
+		update ART_NOTICE
+		set n_title = #n_title#,
+			n_writer = #n_writer#,
+			n_content = #n_content#
+		where n_num = #n_num#
+	</update>
+
+	<update id="modifyComment" parameterClass="NBoardCommentModel">
+		update ART_NOTICE_COMMENT
+		set	nc_writer = #nc_writer#,
+			nc_date = sysdate,
+			nc_content = #nc_content#
+		where nc_num = #nc_num#
+
+	</update>
+	
+	<update id="updateHitcount" parameterClass="java.util.HashMap">
+		update 
+			ART_NOTICE 
+		set n_count = #n_count#
+		where n_num = #n_num#
+	</update>
+	
+	<delete id="deleteArticle" parameterClass="int">
+		delete
+		from ART_NOTICE
+		where n_num = #n_num#	
+	</delete>
+	
+	<delete id="deleteComment" parameterClass="int">
+		delete
+		from ART_NOTICE_COMMENT
+		where nc_num = #nc_num#
+	</delete>
+</sqlMap>

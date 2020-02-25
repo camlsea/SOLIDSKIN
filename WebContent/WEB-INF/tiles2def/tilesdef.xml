@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+    <definition name="index" template="/WEB-INF/viewtiles2/template/layout.jsp">
+        <put-attribute name="title"  value="Spring Tiles Example"/>
+        <put-attribute name="member"   value="/WEB-INF/viewtiles2/template/logForm.jsp"/>     
+        <put-attribute name="menu"   value="/WEB-INF/viewtiles2/template/menu.jsp"/>
+        <put-attribute name="header" value="/WEB-INF/viewtiles2/template/header.jsp"/>
+        <put-attribute name="logLine"   value="/WEB-INF/viewtiles2/template/logLine.jsp"/> 
+        <put-attribute name="banner" value="/WEB-INF/viewtiles2/template/banner.jsp"/>        
+        <put-attribute name="body"   value="/WEB-INF/viewtiles2/body.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/viewtiles2/template/footer.jsp"/>
+    </definition>
+    
+    
+    
+    <!-- main 
+    <definition name="minifreeList" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/miniboard/minifreeList.jsp"/>
+    </definition> -->
+    
+    <!-- 공지사항 -->
+    <definition name="noticeList" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/board/list.jsp"/>
+    </definition>
+    
+    <definition name="noticeWrite" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/board/write.jsp"/>
+    </definition>
+    
+    <definition name="noticeView" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/board/view.jsp"/>
+    </definition>
+    
+    <definition name="noticeModify" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/board/modify.jsp"/>
+    </definition>
+    
+     <definition name="noticeCommentModify" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/board/commentModify.jsp"/>
+    </definition>
+    
+    <!-- 자유게시판 -->
+	<definition name="freeList" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/fboard/freeList.jsp"/>
+    </definition>
+    
+    <definition name="freeView" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/fboard/freeView.jsp"/>
+    </definition>
+    
+    <definition name="freeWrite" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/fboard/freeWrite.jsp"/>
+    </definition>
+    
+    <definition name="freeModify" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/fboard/freeModify.jsp"/>
+    </definition>
+    
+    <definition name="freeCommentModify" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/fboard/freeCommentModify.jsp"/>
+    </definition>
+    
+    <definition name="freeWriteReply" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/fboard/freeWriteReply.jsp"/>
+    </definition>
+    
+    
+    <!-- 명화게시판 -->
+	<definition name="artBoardList" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/artboard/artBoardList.jsp"/>
+    </definition>
+    
+    <definition name="artBoardView" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/artboard/artBoardView.jsp"/>
+    </definition>
+    
+    <definition name="artBoardWrite" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/artboard/artBoardWrite.jsp"/>
+    </definition>
+    
+    <definition name="artBoardModify" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/artboard/artBoardModify.jsp"/>
+    </definition>
+    
+   <!-- 파일삭제 <definition name="delfile" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/artboard/artBoardModify.jsp"/>
+    </definition>
+   -->
+   
+   <!-- 로그인 -->
+   <definition name="login1" extends="index">
+        <put-attribute name="member"   value="/WEB-INF/login/login.jsp"/>
+    </definition>
+    
+    <!-- 회원정보 -->
+      <definition name="loginStatus" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/login/loginStatus.jsp"/>
+    </definition>
+    
+    <!-- 회원정보 수정 -->
+     <definition name="loginStatusModify" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/login/loginStatusModify.jsp"/>
+    </definition>
+    
+       <!-- 로그온 -->
+      <definition name="logon" extends="index">
+        <put-attribute name="member"   value="/WEB-INF/login/logon.jsp"/>
+    </definition>
+    
+ 
+    
+    <!-- 회원가입 -->
+    <definition name="join" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/join/join.jsp"/>
+    </definition>
+    
+    <definition name="joinCheckId" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/join/checkId.jsp"/>
+    </definition>
+    
+    <definition name="joinCheck" extends="index">
+        <put-attribute name="body"   value="/WEB-INF/join/check.jsp"/>
+    </definition>
+
+    
+</tiles-definitions>

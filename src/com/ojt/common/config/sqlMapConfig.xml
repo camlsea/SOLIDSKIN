@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<settings useStatementNamespaces="true"	/>
+	<transactionManager type="JDBC" commitRequired="false">
+		<dataSource type="SIMPLE">
+			<!-- property name="JDBC.Driver"
+				value="com.edsk.apm.appagent.jdbc.PineAppDriver" />-->
+			<property name="JDBC.Driver"
+				value="oracle.jdbc.driver.OracleDriver" />
+			<!--  <property name="JDBC.ConnectionURL"
+				value="jdbc:oracle:thin:@localhost:1521:orcl" /> -->
+			<property name="JDBC.ConnectionURL"
+				value="jdbc:oracle:thin:@211.47.225.19:1521:orcl" />
+			<property name="JDBC.Username" value="test01" />
+			<property name="JDBC.Password" value="test01" />
+		</dataSource>
+	</transactionManager>
+	
+	<sqlMap resource="com/ojt/common/ibatis/login.xml" />
+	<sqlMap resource="com/ojt/common/ibatis/imageBoard.xml" />
+	<sqlMap resource="com/ojt/common/ibatis/member.xml" />
+	<sqlMap resource="com/ojt/common/ibatis/board.xml" />
+	<sqlMap resource="com/ojt/common/ibatis/fboard.xml" />
+</sqlMapConfig>

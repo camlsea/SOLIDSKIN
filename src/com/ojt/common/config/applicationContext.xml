@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    
+    <!-- iBatis -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    	<property name="locations" value="classpath:/com/ojt/common/config/dbconn.properties" />
+    </bean>
+     
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    	<property name="driverClassName" value="${jdbc.driver}"/>
+    	<property name="url" value="${jdbc.url}" />
+    	<property name="username" value="${jdbc.username}" />
+    	<property name="password" value="${jdbc.password}" />
+    </bean>
+    
+   	<bean id="sqlMapClient"
+   		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+   		<property name="dataSource" ref="dataSource" />
+   		<property name="configLocation" value="classpath:/com/ojt/common/config/sqlMapConfig.xml" />	
+   	</bean>
+   	
+   	<bean id="sqlMapClientTemplate"
+   		class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+   		<property name="sqlMapClient" ref="sqlMapClient" />	
+   	</bean>
+   	
+   	<!-- service class -->
+   	<bean id="loginService" class="com.ojt.login.service.LoginService">
+   		<property name="sqlMapClientTemplate" ref="sqlMapClientTemplate" />
+   	</bean>
+   	
+   	<bean id="memberService" class="com.ojt.member.service.MemberService">
+   		<property name="sqlMapClientTemplate" ref="sqlMapClientTemplate" />
+   	</bean>
+   	
+   	<bean id="boardService" class="com.ojt.artboard.service.ArtBoardService">
+   		<property name="sqlMapClientTemplate" ref="sqlMapClientTemplate" />
+   	</bean>
+   	
+   	<bean id="nboardService" class="com.ojt.bbs.service.NBoardService">
+		<property name="sqlMapClientTemplate" ref="sqlMapClientTemplate" />
+   	</bean>
+   	
+   	<bean id="fboardService" class="com.ojt.bbs.service.FBoardService">
+   		<property name="sqlMapClientTemplate" ref="sqlMapClientTemplate" />
+   	</bean>
+       
+</beans>

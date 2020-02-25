@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="fboard">
+	<typeAlias alias="FBoardModel" type="com.ojt.bbs.model.FBoardModel"/>
+	<typeAlias alias="FBoardCommentModel" type="com.ojt.bbs.model.FBoardCommentModel"/>
+	
+		<select id="getFboardList" parameterClass="java.util.HashMap" resultClass="FBoardModel">
+	select 
+			b.f_num, b.f_writer, b.f_title,
+			to_char(b.f_content), b.f_count,
+			to_char(b.f_date, 'YYYY-MM-DD') f_Date, ref, re_step, re_level, 
+			count(c.fc_num) as "comment"			
+		from (select 
+				a.f_num, a.f_writer, a.f_title,
+				a.f_content, a.f_count, a.num,
+				a.f_date, ref, re_step, re_level, rownum rnum
+			from (select ROW_NUMBER()OVER(ORDER BY REF asc, RE_STEP desc, RE_LEVEL desc ) NUM,
+					f_num, f_writer, f_title,
+					f_content, f_count,
+					f_date, ref, re_step, re_level
+				FROM ART_FREE ORDER BY REF DESC, RE_STEP, RE_LEVEL ) a
+        ) b left outer join art_free_comment c on b.f_num = c.linkedarticlenum
+	    where rnum between #startArticleNum# and #endArticleNum#
+	    group by
+	    	b.f_num, b.f_writer, b.f_title, 
+	    	to_char(b.f_content), b.f_count, 
+	    	b.f_date, ref, re_step, re_level, b.rnum, b.num
+	    order by b.num desc 
+	</select>
+
+	<insert id="writeArticle" parameterClass="FBoardModel">
+		INSERT INTO ART_FREE 
+		 	(F_NUM, F_TITLE, F_WRITER, F_DATE, F_COUNT, F_CONTENT, REF, RE_STEP, RE_LEVEL)
+		 VALUES 
+		 	(FREE_BOARD_SEQ.nextval, #f_title#, #f_writer#, sysdate, #f_count#, #f_content#, #ref#, '0', '0')
+	</insert>
+
+	<select id="searchArticle" parameterClass="java.util.HashMap" resultClass="FBoardModel">
+		select 
+			b.f_num, b.f_writer, b.f_title,
+			to_char(b.f_content), b.f_count,
+			to_char(b.f_date, 'YYYY-MM-DD') f_date, 
+			count(c.fc_num) as "comment"
+		from (select 
+				a.f_num, a.f_writer, a.f_title,
+				a.f_content, a.f_count,
+				a.f_date, rownum rnum
+			from (select 
+					f_num, f_writer, f_title,
+					f_content, f_count,
+					f_date
+				from art_free
+				where $type$ like '%$keyword$%'
+        		order by f_num desc) a
+        ) b left outer join art_free_comment c on b.f_num = c.linkedarticlenum
+	    where rnum between #startArticleNum# and #endArticleNum#
+	    group by 
+	    	b.f_num, b.f_writer, b.f_title, 
+	    	to_char(b.f_content), b.f_count, 
+	    	b.f_date
+	    order by b.f_num desc	
+	</select>
+	
+	<select id="getTotalNum" resultClass="int">
+		select 
+			count(f_num)
+		from ART_FREE
+	</select>
+	
+	<select id="getSearchTotalNum" resultClass="int">
+		select 
+			count(f_num)
+		from ART_FREE
+		where $type$ like '%$keyword$%'
+	</select>
+	
+	<insert id="writeComment" parameterClass="FBoardCommentModel">
+		insert into ART_FREE_COMMENT(fc_num, fc_writer, fc_content, fc_date, linkedArticleNum)
+			values(free_cboard_seq.nextVal, #fc_writer#, #fc_content#, sysdate, #linkedArticleNum#)
+	</insert>
+	
+	<!-- 상세화면 -->
+	<select id="getOneArticle" parameterClass="int" resultClass="FBoardModel">
+		select * from ART_FREE where f_num = #value#
+	</select>
+	
+	<select id="getCommentList" parameterClass="int" resultClass="FBoardCommentModel">
+		select 
+			fc_num, fc_writer, fc_content, 
+			fc_Date, linkedArticleNum
+		from ART_FREE_COMMENT
+  		where linkedArticleNum = #fc_num#
+  		order by fc_num asc
+	</select>
+	
+	<select id="getOneComment" parameterClass="int" resultClass="FBoardCommentModel">
+		select 
+			fc_num, fc_writer,
+			fc_content, 
+			fc_date, linkedArticleNum
+		from ART_FREE_COMMENT
+  		where fc_num = #fc_num#		
+	</select>
+	
+	<update id="modifyArticle" parameterClass="FBoardModel">
+		update ART_FREE
+		set f_title = #f_title#,
+			f_writer = #f_writer#,
+			f_content = #f_content#
+		where f_num = #f_num#
+	</update>
+
+	<update id="modifyComment" parameterClass="FBoardCommentModel">
+		update ART_FREE_COMMENT
+		set	fc_writer = #fc_writer#,
+			fc_date = sysdate,
+			fc_content = #fc_content#
+		where fc_num = #fc_num#
+
+	</update>
+	
+	<update id="updateHitcount" parameterClass="java.util.HashMap">
+		update 
+			ART_FREE 
+		set f_count = #f_count#
+		where f_num = #f_num#
+	</update>
+	
+	<delete id="deleteArticle" parameterClass="int">
+		delete
+		from ART_FREE
+		where f_num = #f_num#	
+	</delete>
+	
+	<delete id="deleteComment" parameterClass="int">
+		delete
+		from ART_FREE_COMMENT
+		where fc_num = #fc_num#
+	</delete>
+	
+	 <select id="getRefMax" resultClass="int">
+		SELECT NVL(MAX(REF)+1,'1') AS REF FROM ART_FREE
+	</select>
+	
+	<update id="updateCommunitySetp" parameterClass="FBoardModel">
+		UPDATE ART_FREE SET RE_STEP = RE_STEP+1 WHERE REF = #ref# AND RE_STEP > #re_step#
+	</update>
+	
+	<select id="getStepMax" parameterClass="FBoardModel" resultClass="int">
+		SELECT DECODE(#re_step#,'0',(MAX(RE_STEP)+1),#re_step#+1) AS RE_STEP FROM ART_FREE WHERE REF = #ref#
+	</select>
+	
+	
+	
+	<!-- 답글 입력  -->
+	<insert id="insertReplyBoard" parameterClass="FBoardModel">
+		INSERT INTO ART_FREE (
+			F_NUM, REF, RE_STEP, RE_LEVEL, F_WRITER, F_TITLE, F_CONTENT, F_COUNT, F_DATE
+		) VALUES (
+			FREE_BOARD_SEQ.NEXTVAL, #ref#, #re_step#, #re_level#+1, #f_writer#, #f_title#, #f_content#, '0', sysdate
+		)
+		<selectKey keyProperty="f_num" resultClass="int">
+			SELECT MAX(F_NUM) AS F_NUM FROM ART_FREE
+		</selectKey>
+	</insert>
+	
+</sqlMap>

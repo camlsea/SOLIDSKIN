@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="login">
+	<typeAlias alias="LoginModel" type="com.ojt.login.model.LoginSessionModel"/>
+	<!-- select id="loginCheck" parameterClass="String" resultClass="LoginModel">
+		select 
+			u_no,
+			u_id,
+			u_pw,
+			u_name,
+			u_email,
+			u_date,
+			u_id_gubun
+		from ART_USER
+		where u_id = #u_id#
+	</select-->
+	
+		<select id="loginCheck" parameterClass="String" resultClass="LoginModel">
+		select 
+			a_idx,
+			u_id,
+			u_pw,
+			u_name,
+			u_email,
+			u_date,
+			u_id_gubun
+		from ART_USER
+		where u_id = #u_id#
+	</select>
+	<select id="getOneLoginStatus" parameterClass="String" resultClass="LoginModel">
+		select * from art_user where u_id = #value#
+	</select>
+	<select id="searchId" parameterClass="LoginModel" resultClass="LoginModel">
+		select u_email, u_name, u_id from art_user where 
+			u_email = #u_email#
+			and u_name = #u_name#
+	</select>
+	<select id="searchPw" parameterClass="LoginModel" resultClass="LoginModel">
+		select u_id, u_name, u_pw from art_user where 
+			u_id = #u_id#
+			and u_name = #u_name#
+	</select>
+	<update id="modifyLoginStatus" parameterClass="LoginModel">
+		update art_user
+		set u_pw = #u_pw#,
+			u_email = #u_email#
+		where u_id = #u_id#
+	</update>
+	
+	
+</sqlMap>
+
+
+
+
+
+
+

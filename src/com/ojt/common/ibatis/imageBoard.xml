@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="board">
+	<typeAlias alias="ArtBoardBeans" type="com.ojt.artboard.model.ArtBoardBeans"/>
+	<typeAlias alias="ArtBoardGubunModel" type="com.ojt.artboard.model.ArtBoardGubunModel"/>
+	<select id="getIboardList" parameterClass="java.util.HashMap" resultClass="ArtBoardBeans">
+		select 
+			b.a_idx, b.a_name, b.a_title, b.a_imagename, b.a_gubunboard, b.rnum
+		from (select 
+				a.a_idx, a.a_name, a.a_title, a.a_imagename, a.a_gubunboard,
+				rownum rnum
+			from (select 
+					a_idx, a_name, a_title, a_imagename, a_gubunboard
+				from art_image_board
+        		order by a_idx desc) a
+        ) b
+	    where rnum between #startArticleNum# and #endArticleNum#
+	    group by
+	    	b.a_idx, b.a_name, b.a_title, b.a_imagename, b.a_gubunboard,
+	    	b.rnum
+	    order by b.a_idx desc		
+	</select>
+	<select id="getItotalNum" resultClass="int">
+		select 
+			count(a_idx)
+		from art_image_board
+	</select>
+		<select id="getIsearchTotalNum" resultClass="int">
+		select 
+			count(a_idx)
+		from art_image_board
+		where $type$ like '%$keyword$%'
+	</select>
+	<select id="getOneIarticle" parameterClass="int" resultClass="ArtBoardBeans">
+		select * from art_image_board where a_idx = #value#
+	</select>
+	<select id="searchIarticle" parameterClass="java.util.HashMap" resultClass="ArtBoardBeans">
+		select 
+			b.a_idx, b.a_name, b.a_title, b.a_imagename, b.rnum
+		from (select 
+				a.a_idx, a.a_name, a.a_title, a.a_imagename,
+				rownum rnum
+			from (select 
+					a_idx, a_name, a_title, a_imagename
+				from art_image_board
+				where $type$ like '%$keyword$%'
+        		order by a_idx desc) a
+        ) b
+	    where rnum between #startArticleNum# and #endArticleNum#
+	    group by
+	    	b.a_idx, b.a_name, b.a_title, b.a_imagename,
+	    	b.rnum
+	    order by b.a_idx desc		
+	</select>
+	<select id="getImageList" resultClass="ArtBoardBeans">
+	
+	select a_idx, a_imagename from art_image_board where a_idx = #a_idx#
+		
+	</select>
+	<select id="getBoardGubun" resultClass="ArtBoardGubunModel">
+	
+	select a_gubunboard, g_name from art_board_gubun 
+		where a_gubunboard = #a_gubunboard#
+		
+		
+	</select>
+	
+	<!-- select id="getBoardGubun" resultClass="ArtBoardGubunModel">
+	
+	select a.a_gubunboard, b.a_gubunboard, b.g_name from art_image_board a, art_board_gubun b
+		where a.a_gubunboard = b.a_gubunboard
+		and a.a_gubunboard = #a_gubunboard#
+		
+	</select>-->
+	
+	
+	<insert id="writeIarticle" parameterClass="ArtBoardBeans">
+		insert into art_image_board(a_idx, a_name, a_title, a_content, a_type, a_year, 
+									a_own, a_count, a_gubunboard, a_imagename, a_date)
+	 			values(art_board_seq.nextval, #a_name#, #a_title#, #a_content#, #a_type#, #a_year#, #a_own#,
+	 										   0, #a_gubunboard#, #a_imagename#, sysdate)
+	</insert>
+		<delete id="deleteIarticle" parameterClass="int">
+		delete from art_image_board where a_idx = #value#
+	</delete>
+	<update id="DelFileIarticle" parameterClass="string">
+		update art_image_board
+		set a_iamgename = ''
+	</update>
+	<update id="modifyIarticle" parameterClass="ArtBoardBeans">
+		update art_image_board
+		set a_name = #a_name#,
+			a_title = #a_title#,
+			a_content = #a_content#,
+			a_type = #a_type#,
+			a_year = #a_year#,
+			a_own = #a_own#,
+			a_imagename = #a_imagename#
+		where a_idx = #a_idx#
+	</update>
+</sqlMap>

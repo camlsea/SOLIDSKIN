@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<sqlMap namespace="newboard">
+	
+	<typeAlias type="com.ojt.bbs.model.FreeBoardModel" alias="newboard"/>
+
+	<select id="getBoardList" resultType="newboard" parameterType="newboard">
+		SELECT * FROM (
+			SELECT ROW_NUMBER()OVER(ORDER BY REF asc, RE_STEP desc, RE_LEVEL desc ) NUM, 
+				CEIL(ROW_NUMBER()OVER(ORDER BY REF DESC, RE_STEP, RE_LEVEL)/#{pageline}) PAGE, 
+				F_NUM, REF, RE_STEP, RE_LEVEL, F_WRITER, F_TITLE, F_COUNT, TO_CHAR (F_DATE, 'YYYY-MM-DD') F_DATE
+			FROM ART_FREE ORDER BY REF DESC, RE_STEP, RE_LEVEL
+		 ) WHERE PAGE = #{page}
+	</select>
+	
+	<select id="getBoard" parameterType="BigDecimal" resultType="newboard">
+		SELECT F_NUM, REF, RE_STEP, RE_LEVEL, F_WRITER, F_TITLE, F_COUNT, TO_CHAR (F_DATE, 'YYYY-MM-DD') F_DATE,	F_CONTENT			
+		FROM ART_FREE WHERE F_NUM = #{f_num}
+	</select>
+	
+	<select id="getRefMax" resultType="int">
+		SELECT NVL(MAX(REF)+1,'1') AS REF FROM ART_FREE
+	</select>
+	
+	<insert id="insertBoard" parameterType="newboard">
+		INSERT INTO ART_FREE (
+			F_NUM, REF, RE_STEP, RE_LEVEL, F_WRITER, F_TITLE, F_CONTENT, F_COUNT, F_DATE
+		) VALUES (
+			FREE_BOARD_SEQ.NEXTVAL, #{ref}, '0', '0', #{f_writer}, #{f_title}, #{f_content}, '0', sysdate
+		)
+		<selectKey resultType="BigDecimal" keyProperty="f_num" order="AFTER">
+			SELECT MAX(F_NUM) AS F_NUM FROM ART_FREE
+		</selectKey>
+	</insert>
+	
+	<update id="updateBoard" parameterType="newboard">
+		UPDATE ART_FREE SET
+			F_WRITER     = #{f_writer},			
+			F_TITLE     = #{f_title}, 
+			F_CONTENT  = #{f_content},
+			F_DATE = SYSDATE
+		WHERE F_NUM = #{f_num}
+	</update>
+		
+	<update id="updateCommunitySetp" parameterType="newboard">
+		UPDATE ART_FREE SET RE_STEP = RE_STEP+1 WHERE REF = #{ref} AND RE_STEP > #{re_step}
+	</update>
+	
+	<select id="getStepMax" parameterType="newboard" resultType="int">
+		SELECT DECODE(#{re_step},'0',(MAX(RE_STEP)+1),#{re_step}+1) AS RE_STEP FROM ART_FREE WHERE REF = #{ref}
+	</select>
+	
+	<insert id="insertReplyBoard" parameterType="newboard">
+		INSERT INTO ART_FREE (
+			F_NUM, REF, RE_STEP, RE_LEVEL, F_WRITER, F_TITLE, F_CONTENT, F_COUNT, F_DATE
+		) VALUES (
+			FREE_BOARD_SEQ.NEXTVAL, #{ref}, #{re_step}, #{re_level}+1, #{f_writer}, #{f_title}, #{f_content}, '0', sysdate
+		)
+		<selectKey resultType="BigDecimal" keyProperty="f_num" order="AFTER">
+			SELECT MAX(F_NUM) AS F_NUM FROM ART_FREE
+		</selectKey>
+	</insert>	
+</sqlMap>

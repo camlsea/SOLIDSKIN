@@ -1,0 +1,54 @@
+﻿@charset "utf-8";
+
+/* Common */
+
+* {font-family: Arial,dotum,san-safe;}
+
+/* Scroll Style */
+body {
+	scrollbar-face-color:#E7E7E7;
+	scrollbar-highlight-color:#fBfBfB;
+	scrollbar-3dlight-color:#616161;
+	scrollbar-shadow-color:#A3A3A3;
+	scrollbar-darkshadow-color:#fBfBfB;
+	scrollbar-track-color:#fBfBfB;
+	scrollbar-arrow-color:#595959;
+}
+
+img {border:0; vertical-align:middle;}
+
+table {border-collapse:collapse; border-spacing:0;}
+
+th, td { border-collapse:collapse;}
+
+/* =Form */
+
+form { display:inline; }
+
+caption {display:none;}
+
+fieldset, iframe { border:none;}
+
+/* image */
+img {border:0;}
+
+/* link style */
+a, img, input {selector-dummy: expression(this.hideFocus=true);}
+
+/* Float */
+.fl {float:left;}
+.fr {float:right;}
+
+/* Text Align */
+.tl {text-align:left !important;}
+.tl6 {text-align:left; padding:0 0 0 15px; !important;}
+.tr {text-align:right !important;}
+.tc {text-align:center !important;}
+
+/* Vertical Ailgn */
+.vm {vertical-align:middle !important;}
+.vt {vertical-align:top !important;}
+.vb {vertical-align:bottom !important;}
+
+/* Mouse Cursor */
+.pointer {cursor:pointer;_cursor:hand;}

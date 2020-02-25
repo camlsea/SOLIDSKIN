@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    
+    <!-- controllers -->   
+	<bean id="loginController"
+    	class="com.ojt.login.controller.LoginController" />
+ 	
+ 	<bean id="memberController"
+ 		class="com.ojt.member.controller.MemberController" />
+ 		
+ 	<bean id="artBoardController" 
+ 		class="com.ojt.artboard.controller.ArtBoardController" />
+ 		
+	<bean id="boardController"
+    	class="com.ojt.bbs.controller.NBoardController" />
+    	
+     <bean id="fboardController"
+    	class="com.ojt.bbs.controller.FBoardController" />
+    	
+    	
+    <!-- 미니게시판 -->
+    <bean id="minifboardController"
+    	class="com.ojt.miniboard.controller.miniFBoardController" />
+   		
+    <bean id="miniArtboardController"
+    	class="com.ojt.miniboard.controller.miniArtBoardController" />	
+	
+	<bean id="miniNBoardController"
+    	class="com.ojt.miniboard.controller.miniNBoardController" />
+
+	<!-- bean class="com.ojt.miniboard.controller.MiniController"/-->
+    	
+    <!-- tiles Test -->
+    <bean class="kr.spring.tiles.controller.IndexController"/>
+<!--     <bean class="kr.spring.tiles.controller.Menu1Controller"/>   -->
+    
+    
+    <!-- test -->
+    <bean class="com.ojt.artboard.controller.ArtTestList"/>
+    
+<!-- 	<bean class="kr.spring.tiles.controller.Menu1Controller"/>
+	<bean class="kr.spring.tiles.controller.Menu2Controller"/>	
+	<bean class="kr.spring.tiles.controller.Menu3Controller"/>  -->
+	
+ 	<!-- tiles 설정 -->
+    <bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/tiles2def/tilesdef.xml,/WEB-INF/tiles2def/tilesdef2.xml</value>
+			</list>
+		</property>
+		<property name="preparerFactoryClass"
+			value="org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory" />
+	</bean>
+
+	<bean id="tilesViewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.tiles2.TilesView" />
+	</bean>
+	  	   	
+    <!-- viewResolver -->
+    <bean id="vewResolver"
+    	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" /> 	
+   		<property name="prefix" value="/WEB-INF/" />
+   		<property name="suffix" value=".jsp" />
+   	</bean>
+   	
+   	<!-- validation massage -->
+    <bean id="messageSource"
+    	class="org.springframework.context.support.ResourceBundleMessageSource">
+    	<property name="basenames">
+    		<list>
+    			<value>com.ojt.common.config.validation</value>
+    		</list>
+    	</property>	
+    </bean>  
+   	
+   	<!-- interceptor -->
+   	<bean id="multipartResolver"
+   		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+   	</bean>
+   	
+   	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="order" value="1" />
+	</bean> 
+	
+	<bean id="selectedAnnotationHandlerMapping" class="org.springplugins.web.SelectedAnnotationHandlerMapping">
+     <property name="order" value="0" />
+    <property name="urls">
+    <list>
+  	 <value>/login.do</value>
+     <value>/member/join.do</value> 
+     <value>/iboard/list.do</value> 
+     <value>/board/list.do</value>
+     <value>/fboard/list.do</value>  
+    </list>
+    </property>
+
+    <property name="interceptors">
+    <list>
+    <ref bean="sessionInterceptor"/>
+    </list>
+    </property>
+    </bean>
+	 	
+   	
+   	<bean id="sessionInterceptor" class="com.ojt.login.intercepter.SessionInterceptor" />
+
+</beans>

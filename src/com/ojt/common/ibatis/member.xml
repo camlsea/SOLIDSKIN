@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="member">
+	<typeAlias alias="MemberModel" type="com.ojt.member.model.MemberModel"/>
+	
+	<!-- select id="selectOneMember" parameterClass="int" resultClass="MemberModel">
+		select u_no, u_id, u_pw, u_name, u_email, u_date, u_id_gubun
+		from ART_USER
+		where u_no = #u_no#
+	</select>
+	
+	<select id="selectAllMember" resultClass="MemberModel">
+		select u_no, u_id, u_pw, u_name, u_email, u_date, u_id_gubun
+		from ART_USER
+	</select>
+	
+	<select id="findByUserId" parameterClass="String" resultClass="MemberModel">
+		select 
+			u_no,
+			u_id,
+			u_pw,
+			u_name,
+			u_email,
+			u_date,
+			u_id_gubun
+		from ART_USER
+		where u_id = #u_id# and rownum = 1
+	</select>
+	
+	<insert id="addMember" parameterClass="MemberModel">
+		insert into ART_USER(u_no, u_id, u_pw, u_name, u_email, u_date, u_id_gubun)
+		values(USER_SEQ.nextVal, #u_id#, #u_pw#, #u_name#, #u_email#, sysdate, #u_id_gubun#)
+	</insert-->
+		<select id="selectOneMember" parameterClass="int" resultClass="MemberModel">
+		select a_idx, u_id, u_pw, u_name, u_email, u_date, u_id_gubun
+		from ART_USER
+		where a_idx = #a_idx#
+	</select>
+	
+	<select id="selectAllMember" resultClass="MemberModel">
+		select a_idx, u_id, u_pw, u_name, u_email, u_date, u_id_gubun
+		from ART_USER
+	</select>
+	
+	<select id="findByUserId" parameterClass="String" resultClass="MemberModel">
+		select 
+			a_idx,
+			u_id,
+			u_pw,
+			u_name,
+			u_email,
+			u_date,
+			u_id_gubun
+		from ART_USER
+		where u_id = #u_id# and rownum = 1
+	</select>
+	<select id="getUserGubun" parameterClass="int" resultClass="MemberModel">
+		select u_id_gubun from art_user where u_id_gubun = #value#
+	</select>
+	<insert id="addMember" parameterClass="MemberModel">
+		insert into ART_USER(a_idx, u_id, u_pw, u_name, u_email, u_date, u_id_gubun)
+		values(USER_SEQ.nextVal, #u_id#, #u_pw#, #u_name#, #u_email#, sysdate, 1)
+	</insert>			
+</sqlMap>
